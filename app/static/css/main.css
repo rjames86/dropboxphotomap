@@ -1,0 +1,33 @@
+html, body, #map-canvas {
+    height: 750px;
+    width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0px
+}
+
+#filelist {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+.loading {
+    /*display: inline;*/
+    display: none;
+}
+
