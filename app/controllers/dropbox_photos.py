@@ -11,9 +11,6 @@ from flask import abort, Flask, redirect, render_template, request, session, url
 
 dropbox_photos = Blueprint('dropbox_photos', __name__)
 
-APP_KEY = current_app.config['DROPBOX_APP_KEY']
-APP_SECRET = current_app.config['DROPBOX_APP_SECRET']
-
 
 def get_url(route):
     '''Generate a proper URL, forcing HTTPS if not running locally'''
@@ -28,6 +25,8 @@ def get_url(route):
 
 
 def get_flow():
+    APP_KEY = current_app.config['DROPBOX_APP_KEY']
+    APP_SECRET = current_app.config['DROPBOX_APP_SECRET']
     return DropboxOAuth2Flow(
         APP_KEY,
         APP_SECRET,
