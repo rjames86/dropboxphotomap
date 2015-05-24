@@ -17,11 +17,12 @@
     return getData();
   };
 
-  callback = function(data) {
-    return setMarkers(map, data.contents);
+  callback = function(data, inc_dir) {
+    return setMarkers(map, data.contents, inc_dir);
   };
 
   getData = function(inc_dir) {
+    $("[data-path-name='" + inc_dir + "']").css('display', 'inline');
     deleteMarkers();
     return $.ajax({
       url: '/dropbox_photos/get_photos',
@@ -29,7 +30,9 @@
         dir: inc_dir
       },
       type: 'GET',
-      success: callback
+      success: function(data) {
+        return callback(data, inc_dir);
+      }
     });
   };
 
@@ -80,9 +83,8 @@
     return markers = [];
   };
 
-  setMarkers = function(map, locations) {
-    var location, myLatLng, photo, _i, _len, _results;
-    _results = [];
+  setMarkers = function(map, locations, inc_dir) {
+    var location, myLatLng, photo, _i, _len;
     for (_i = 0, _len = locations.length; _i < _len; _i++) {
       photo = locations[_i];
       location = photo['photo_info']['lat_long'];
@@ -90,9 +92,9 @@
         continue;
       }
       myLatLng = new google.maps.LatLng(location[0], location[1]);
-      _results.push(addMarker(myLatLng, photo.path));
+      addMarker(myLatLng, photo.path);
     }
-    return _results;
+    return $("[data-path-name='" + inc_dir + "']").hide();
   };
 
   google.maps.event.addDomListener(window, 'load', initialize);
@@ -133,7 +135,7 @@
     getInitialState: function() {
       return {
         filelist: [],
-        previousDirs: [],
+        previousDirs: ['/'],
         dir: '/'
       };
     },
@@ -161,7 +163,7 @@
     componentWillUpdate: function(nextProps, nextState) {
       var current_dir, previousDirs;
       if (this.state.dir !== nextState.dir) {
-        if (nextState.previousDirs.length >= this.state.previousDirs.length) {
+        if (nextState.previousDirs.length > this.state.previousDirs.length) {
           current_dir = this.state.dir;
           previousDirs = this.state.previousDirs;
           previousDirs.push(current_dir);
@@ -182,11 +184,15 @@
     lineItem: function(entry) {
       return d.li({
         className: "list-group-item"
-      }, d.button({
+      }, d.span({
         onClick: (function(_this) {
           return function() {
+            var previousDirs;
+            previousDirs = _this.state.previousDirs;
+            previousDirs.push(entry.path);
             return _this.setState({
-              dir: entry.path
+              dir: entry.path,
+              previousDirs: previousDirs
             });
           };
         })(this)
@@ -197,7 +203,12 @@
             return getData(entry.path);
           };
         })(this)
-      }, "Go"));
+      }, "Go!"), d.div({
+        className: "loading",
+        "data-path-name": entry.path
+      }, d.span({
+        className: "glyphicon glyphicon-refresh glyphicon-refresh-animate"
+      }, "")));
     },
     render: function() {
       return d.div({}, Breadcrumb({
@@ -213,7 +224,8 @@
           };
         })(this)
       }), d.ul({
-        className: "list-group"
+        className: "list-group",
+        id: "filelist"
       }, this.state.filelist.map(this.lineItem)));
     }
   });
@@ -227,7 +239,10 @@
       }, d.div({
         className: "col-md-9",
         "role": "main"
-      }, FileList({}))));
+      }, FileList({})), d.div({
+        className: "col-md-9",
+        "role": "main"
+      }, d.p({}, "Click on a folder name to navigate into it. Click Go! to see the containing photos on a map"))));
     }
   });
 
