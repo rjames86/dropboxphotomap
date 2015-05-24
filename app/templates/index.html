@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+      html, body, #map-canvas {
+        height: 750px;
+        width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0px
+      }
+    </style>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.0/react.js"></script>
+</head>
+<body>
+    <div id="map-canvas"></div>
+    <div id="container"></div>
+    <script src="{{ url_for('static', filename='javascript/main.js') }}"></script>
+</body>
+</html>
