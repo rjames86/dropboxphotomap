@@ -40,7 +40,6 @@ class HerokuConfig(ProductionConfig):
     @classmethod
     def init_app(cls, app):
         print "Using Heroku config"
-        print cls.DROPBOX_APP_KEY
         ProductionConfig.init_app(app)
 
         # log to stderr
