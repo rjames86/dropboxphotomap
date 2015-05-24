@@ -101,7 +101,7 @@
     getInitialState: function() {
       return {
         filelist: [],
-        dir: '/Pictures'
+        dir: '/'
       };
     },
     getList: function(dir) {

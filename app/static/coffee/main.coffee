@@ -77,7 +77,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 FileList = React.createClass
     getInitialState: ->
         filelist: []
-        dir: '/Pictures'
+        dir: '/'
 
     getList: (dir) ->
         $.ajax
