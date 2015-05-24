@@ -5,10 +5,7 @@ from config import config
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
-    print 'using config', config_name
     config[config_name].init_app(app)
-    print "CONFIG!!", config
-    print "APP CONFIG", app.config
 
     from controllers.main import main as main_blueprint
     from controllers.dropbox_photos import dropbox_photos as dropbox_photos_blueprint

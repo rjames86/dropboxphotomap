@@ -3,8 +3,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    DROPBOX_APP_KEY = os.environ.get('DROPBOX_APP_KEY')
-    DROPBOX_APP_SECRET = os.environ.get('DROPBOX_APP_SECRET')
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     MAIL_SERVER = 'smtp.googlemail.com'
@@ -16,6 +14,8 @@ class Config:
     FLASKY_MAIL_SENDER = ''
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
     SSL_DISABLE = True
+    DROPBOX_APP_KEY = os.environ.get('DROPBOX_APP_KEY')
+    DROPBOX_APP_SECRET = os.environ.get('DROPBOX_APP_SECRET')
 
     @staticmethod
     def init_app(app):
@@ -40,6 +40,7 @@ class HerokuConfig(ProductionConfig):
     @classmethod
     def init_app(cls, app):
         print "Using Heroku config"
+        print cls.DROPBOX_APP_KEY
         ProductionConfig.init_app(app)
 
         # log to stderr
