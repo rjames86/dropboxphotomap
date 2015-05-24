@@ -68,7 +68,7 @@ def get_photos():
 def listdir():
     dirname = request.args.get('dir') or '/'
     client = DropboxClient(session.get('access_token'))
-    file_list = client.metadata(dirname)
+    file_list = client.metadata(dirname, list=True)
     dirs = [f for f in file_list['contents'] if f['is_dir']]
     return jsonify(dict(contents=dirs))
 

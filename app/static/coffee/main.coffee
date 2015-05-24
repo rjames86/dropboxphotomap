@@ -73,10 +73,29 @@ setMarkers = (map, locations) ->
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
+Breadcrumb = React.createClass
+    getDefaultProps: ->
+        onSelect: ->
+
+    createLine: (line, index) ->
+        if line == '/'
+        then clean_name = 'Home'
+        else clean_name = line.replace /^.*[\\\/]/, ''
+        d.li {},
+            d.a {
+                onClick: =>
+                    @props.onSelect line, index
+            }, clean_name
+
+    render: ->
+        d.ul {className: "breadcrumb"},
+            @props.filelist.map (item, i) => @createLine(item, i)
+
 
 FileList = React.createClass
     getInitialState: ->
         filelist: []
+        previousDirs: []
         dir: '/'
 
     getList: (dir) ->
@@ -95,6 +114,17 @@ FileList = React.createClass
 
     componentWillUpdate: (nextProps, nextState) ->
         if @state.dir != nextState.dir
+            if nextState.previousDirs.length >= @state.previousDirs.length
+                current_dir = @state.dir
+                previousDirs = @state.previousDirs
+                previousDirs.push current_dir
+                @setState
+                    previousDirs: previousDirs
+            else
+                @setState
+                    previousDirs: nextState.previousDirs
+            @setState
+                dir: nextState.dir
             @getList nextState.dir
         return
 
@@ -104,8 +134,16 @@ FileList = React.createClass
             d.button {className: "btn btn-info", onClick: => getData entry.path}, "Go"
 
     render: ->
-        d.ul {className: "list-group"},
-            @state.filelist.map @lineItem
+        d.div {},
+            Breadcrumb
+                filelist: @state.previousDirs
+                onSelect: (item, index) =>
+                    previousDirs = @state.previousDirs
+                    @setState
+                        dir: item
+                        previousDirs: previousDirs[0..index]
+            d.ul {className: "list-group"},
+                @state.filelist.map @lineItem
 
 Page = React.createClass
     render: ->
