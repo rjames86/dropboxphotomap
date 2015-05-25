@@ -60,8 +60,12 @@ def get_photos():
     dirname = request.args.get('dir') or '/'
     client = DropboxClient(session.get('access_token'))
     file_list = client.metadata(dirname, include_media_info=True)
-    photos = [f for f in file_list['contents'] if f.get('photo_info')]
+    if file_list.get('contents'):
+        photos = [f for f in file_list['contents'] if f.get('photo_info')]
+    else:
+        photos = [file_list]
     return jsonify(dict(contents=photos))
+
 
 
 @dropbox_photos.route('/listdir')
@@ -70,7 +74,8 @@ def listdir():
     client = DropboxClient(session.get('access_token'))
     file_list = client.metadata(dirname, list=True)
     dirs = [f for f in file_list['contents'] if f['is_dir']]
-    return jsonify(dict(contents=dirs))
+    # return jsonify(dict(contents=dirs))
+    return jsonify(file_list)
 
 
 @dropbox_photos.route('/picture_a_day')
